@@ -19,5 +19,5 @@ from django.conf.urls import include, url
 urlpatterns = [
     url("admin/", admin.site.urls),
     url("api/", include("gene_lookup.urls")),
-    url("/", include("gene_lookup.urls")),
+    url("", include("gene_lookup.urls")),
 ]
