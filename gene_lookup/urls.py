@@ -9,8 +9,7 @@ from . import api_views
 app_name = "gene_lookup"
 
 urlpatterns = [
-    # path("", api_views.ReactAPIView, name="gene_index"),
-    url('/', api_views.GeneViewSet.as_view())
+    url('', api_views.GeneViewSet.as_view())
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
