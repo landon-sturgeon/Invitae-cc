@@ -130,12 +130,6 @@ class FilterForm extends React.Component {
             )}
           </Form.Item>
 
-          <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
-
         {loading ? (
           <div className="loader-div">
             <Spin />
