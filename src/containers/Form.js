@@ -27,7 +27,7 @@ class FilterForm extends React.Component {
 
       if (!err) {
         axios
-          .get("invitae-cc.herokuapp.com/api/genes/", {
+          .get("http://127.0.0.1:8000/api/genes/", {
             params: {
               search
             }
