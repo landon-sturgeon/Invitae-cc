@@ -1,0 +1,14 @@
+<h1>{{ specific_gene.name }}</h1>
+
+{% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+{% endif %}
+
+<form action="{% url 'gene_lookup:gene_detail' specific_gene.id %}" method="post">
+    {% csrf_token %}
+    {% for variant in gene_variants %}
+        <input type="radio" name="pk" id="{{ variant.id }}" value="{{ variant.id }}">
+        <label for="{{ variant.id }}">{{ variant.other_name }}</label><br>
+    {% endfor %}
+    <input type="submit" value="Submit">
+</form>

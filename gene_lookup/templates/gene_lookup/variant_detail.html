@@ -1,0 +1,16 @@
+<h1>{{ variant.gene.name }}</h1>
+
+{% if error_message %}
+    <p><strong>{{ error_message }}</strong></p>
+{% endif %}
+
+<table>
+    <tr>
+        <td><strong>Alias</strong></td>
+        <td>{{ variant.other_name }}</td>
+    </tr>
+    <tr>
+        <td><strong>Last Reviewed</strong></td>
+        <td>{{variant.last_evaluated }}</td>
+    </tr>
+</table>
