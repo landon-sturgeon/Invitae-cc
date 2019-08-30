@@ -10,11 +10,12 @@ import Results from "./Results";
 
 class FilterForm extends React.Component {
   state = {
-    results: [],
     gene_names: [],
     loading: false,
     error: null,
     genes: [],
+    suggested_genes: [],
+    suggested_gene_names: [],
     genes_populated: false
   };
 
@@ -65,26 +66,38 @@ class FilterForm extends React.Component {
     return
   };
 
+  filterUndefined = (arr) => {
+    let suggestions = [];
+    suggestions = arr.filter(
+      function(suggestions, index) {
+        return suggestions !== undefined;
+      }
+    );
+    return(suggestions)
+  };
+
   onTextChange = (e) => {
     const value = e.target.value;
     let genes = [];
     let suggestions = [];
     if (value.length > 0) {
-      const regex = new RegExp('{value}*');
-      suggestions = this.state.genes.map( x => {
-        if (regex.test(x.name)) {
-          return([x])
+      const regex = new RegExp(value, 'i');
+      suggestions = this.state.gene_names.map( x => {
+        if (regex.test(x)) {
+          return(x)
         }
       })
-      suggestions = suggestions.flat()
+      suggestions = this.filterUndefined(suggestions);
     };
 
-    genes = this.state.results.map(x => {
+    genes = this.state.genes.map(x => {
         if (suggestions.indexOf(x.name) > -1) {
-          return([x])
+          return(x)
         }
     });
-    if (suggestions.length > 0) {
+    genes = this.filterUndefined(genes);
+
+    if (genes.length > 0) {
       this.setState({
         genes_populated: true
       })
