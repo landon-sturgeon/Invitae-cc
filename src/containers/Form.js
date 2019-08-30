@@ -76,18 +76,24 @@ class FilterForm extends React.Component {
     return(suggestions)
   };
 
+  getSuggestedNames = (value) => {
+    let suggestions = [];
+    const regex = new RegExp(value, 'i');
+    suggestions = this.state.gene_names.map( x => {
+      if (regex.test(x)) {
+        return(x)
+      }
+    });
+    suggestions = this.filterUndefined(suggestions);
+    return(suggestions)
+  };
+
   onTextChange = (e) => {
     const value = e.target.value;
     let genes = [];
     let suggestions = [];
     if (value.length > 0) {
-      const regex = new RegExp(value, 'i');
-      suggestions = this.state.gene_names.map( x => {
-        if (regex.test(x)) {
-          return(x)
-        }
-      })
-      suggestions = this.filterUndefined(suggestions);
+      suggestions = this.getSuggestedNames(value);
     };
 
     genes = this.state.genes.map(x => {
@@ -106,7 +112,10 @@ class FilterForm extends React.Component {
           genes_populated: false
         })
     }
-    this.setState({genes: genes});
+    this.setState({
+      suggested_genes: genes,
+      suggested_gene_names: suggestions
+    });
   }
 
   render() {
@@ -137,10 +146,9 @@ class FilterForm extends React.Component {
         ): null}
 
         {this.state.genes_populated ? (
-            <Results genes={genes} />
+            <Results genes={this.state.suggested_genes} />
           ) : null
         }
-
         </Form>
       </div>
     );
