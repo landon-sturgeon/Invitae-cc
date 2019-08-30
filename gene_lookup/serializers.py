@@ -34,3 +34,11 @@ class GeneSerializer(serializers.ModelSerializer):
             "reported_ref",
             "reported_alt",
         )
+
+
+class GeneNameSerializer(serializers.ModelSerializer):
+    """Generic serializer for the API endpoint to return the Gene name."""
+
+    class Meta:
+        model = Gene
+        fields = ("name",)

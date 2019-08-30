@@ -8,47 +8,96 @@ import {
 import axios from "axios";
 import Results from "./Results";
 
-const Search = Input.Search;
-
 class FilterForm extends React.Component {
   state = {
     results: [],
+    gene_names: [],
     loading: false,
-    error: null
+    error: null,
+    genes: [],
+    genes_populated: false
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.form.validateFields((err, values) => {
-      const search =
-          values["geneName"] === undefined ? null : values["geneName"];
+  constructor(props) {
+    super(props);
+    this.getGenes = this.getGenes.bind(this);
+    this.getGeneNames = this.getGeneNames.bind(this);
+  }
 
-      this.setState({ loading: true });
+  componentDidMount() {
+    window.addEventListener('load', this.getGenes);
+    window.addEventListener('load', this.getGeneNames);
+  };
 
-      if (!err) {
-        axios
-          .get("http://127.0.0.1:8000/api/genes/", {
-            params: {
-              search
-            }
-          })
-          .then(res => {
-            this.setState({
-              loading: false,
-              results: res.data
-            });
-          })
-          .catch(err => {
-            this.setState({ error: "There was an error" });
-            console.log(err);
-          });
-        console.log("Received values of form: ", values);
-      }
+  getGenes () {
+    axios
+      .get("http://127.0.0.1:8000/api/genes/")
+      .then(res => {
+        this.setState({
+          loading: false,
+          genes: res.data
+        });
+      })
+      .catch(err => {
+        this.setState({ error: "There was an error" });
+        console.log(err);
+      });
+    return
+  };
+
+  getGeneNames () {
+    axios
+      .get("http://127.0.0.1:8000/api/names/")
+      .then(res => {
+        let names = [];
+        names = res.data.map( x => {
+          return(names.concat([x["name"]]))
+        });
+        this.setState({
+          loading: false,
+          gene_names: names.flat()
+        });
+      })
+      .catch(err => {
+        this.setState({ error: "There was an error" });
+        console.log(err);
+      });
+    return
+  };
+
+  onTextChange = (e) => {
+    const value = e.target.value;
+    let genes = [];
+    let suggestions = [];
+    if (value.length > 0) {
+      const regex = new RegExp('{value}*');
+      suggestions = this.state.genes.map( x => {
+        if (regex.test(x.name)) {
+          return([x])
+        }
+      })
+      suggestions = suggestions.flat()
+    };
+
+    genes = this.state.results.map(x => {
+        if (suggestions.indexOf(x.name) > -1) {
+          return([x])
+        }
     });
-  };
+    if (suggestions.length > 0) {
+      this.setState({
+        genes_populated: true
+      })
+    } else {
+        this.setState({
+          genes_populated: false
+        })
+    }
+    this.setState({genes: genes});
+  }
 
   render() {
-    const { error, loading, results } = this.state;
+    const { error, loading, genes} = this.state;
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
       wrapperCol: { span: 12, offset: 6 }
@@ -64,11 +113,7 @@ class FilterForm extends React.Component {
 
           <Form.Item>
             {getFieldDecorator("geneName")(
-              <Search
-                placeholder="Gene Name"
-                onSearch={value => console.log(value)}
-                enterButton
-              />
+              <Input onChange={this.onTextChange} type="text"/>
             )}
           </Form.Item>
 
@@ -77,15 +122,19 @@ class FilterForm extends React.Component {
               Submit
             </Button>
           </Form.Item>
-        </Form>
 
         {loading ? (
           <div className="loader-div">
             <Spin />
           </div>
-        ) : (
-          <Results genes={results} />
-        )}
+        ): null}
+
+        {this.state.genes_populated ? (
+            <Results genes={genes} />
+          ) : null
+        }
+
+        </Form>
       </div>
     );
   }
