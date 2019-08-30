@@ -3,7 +3,6 @@ import { Route } from "react-router-dom";
 import Hoc from "./hoc/hoc";
 
 import Form from "./containers/Form";
-import InfiniteResults from "./containers/InfiniteScrollResults";
 
 const BaseRouter = () => (
   <Hoc>
