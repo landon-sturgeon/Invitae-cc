@@ -7,6 +7,7 @@ const Result = ({ gene }) => {
         <span>
           <b>Gene Name:</b> {gene.name}{" "}
         </span>
+
         <span>
           <b>Nucleotide Change:</b> {gene.nucleotide_change}{" "}
         </span>

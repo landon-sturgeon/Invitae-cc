@@ -1,9 +1,7 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   Form,
   Input,
-  Button,
-  Spin
 } from "antd";
 import axios from "axios";
 import Results from "./Results";
@@ -11,12 +9,14 @@ import Results from "./Results";
 class FilterForm extends React.Component {
   state = {
     gene_names: [],
-    loading: false,
     error: null,
     genes: [],
     suggested_genes: [],
     suggested_gene_names: [],
-    genes_populated: false
+    genes_populated: false,
+    showSuggestions: false,
+    activeSuggestion: 0,
+    userInput: ""
   };
 
   constructor(props) {
@@ -63,6 +63,7 @@ class FilterForm extends React.Component {
         this.setState({ error: "There was an error" });
         console.log(err);
       });
+
     return
   };
 
@@ -112,18 +113,44 @@ class FilterForm extends React.Component {
           genes_populated: false
         })
     }
+
     this.setState({
       suggested_genes: genes,
-      suggested_gene_names: suggestions
+      suggested_gene_names: suggestions,
+      activeSuggestion: 0,
+      showSuggestions: true,
+      userInput: value
     });
+    this.render()
   }
 
   render() {
-    const { error, loading, genes} = this.state;
-    const { getFieldDecorator } = this.props.form;
+    const { error } = this.state;
     const formItemLayout = {
       wrapperCol: { span: 12, offset: 6 }
     };
+
+    let suggestionsListComponent = null;
+    if (this.state.showSuggestions && this.state.userInput) {
+      if (this.state.suggested_gene_names.length > 0) {
+        suggestionsListComponent = (
+          <ul class="suggestions">
+            {this.state.suggested_gene_names.map((temp_sugg, index) => {
+              let className = null;
+
+              if (index === this.state.activeSuggestion) {
+                className = "suggestion-active";
+              }
+
+              return (
+                <li className={className} key={index}>{temp_sugg}</li>
+              );
+            })}
+          </ul>
+        );
+      };
+    };
+
     return (
       <div>
         {error && <span>There was an error</span>}
@@ -132,18 +159,12 @@ class FilterForm extends React.Component {
           <Form.Item>
             <h1 className="ant-form-text">Gene Lookup</h1>
           </Form.Item>
-
-          <Form.Item>
-            {getFieldDecorator("geneName")(
+          <Fragment>
+            <Form.Item>
               <Input onChange={this.onTextChange} type="text"/>
-            )}
-          </Form.Item>
-
-        {loading ? (
-          <div className="loader-div">
-            <Spin />
-          </div>
-        ): null}
+              { suggestionsListComponent }
+            </Form.Item>
+          </Fragment>
 
         {this.state.genes_populated ? (
             <Results genes={this.state.suggested_genes} />
