@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'gene_lookup_frontend',
-    # 'django_filters',
 ]
 
 MIDDLEWARE = [
