@@ -25,7 +25,7 @@ SECRET_KEY = 'xxb^&!4wj*k2h@nqk4!@#w6g!x*gapaddrwazt4r_$&yzp^mx_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.herokuapp.com', '0.0.0.0', "http://localhost"]
+ALLOWED_HOSTS = ['invitae-cc.herokuapp.com', '127.0.0.1:8000']
 
 CORS_ORIGIN_ALLOW_ALL=True
 
