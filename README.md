@@ -27,5 +27,5 @@ python manage.py test
 TODO<br />
 [] Deploy to Heroku<br />
 [] Fixed size of autocomplete dropdown<br />
-[] add a onClick binding to the autocomplete dropdown
+[] add a onClick binding to the autocomplete dropdown<br />
 [] format the resulting table of the gene variants to be pretty
