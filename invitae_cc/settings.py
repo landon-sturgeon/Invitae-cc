@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'gene_lookup.apps.GeneLookupConfig',
     'corsheaders',
     'rest_framework',
-    'gene_lookup_frontend',
 ]
 
 MIDDLEWARE = [
